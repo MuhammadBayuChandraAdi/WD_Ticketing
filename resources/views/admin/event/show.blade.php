@@ -15,61 +15,96 @@
         @endif
         <div class="card bg-base-100 shadow-sm">
             <div class="card-body">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="card-title text-2xl">Detail Event</h2>
-                    <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-primary">
-                        Edit Event
-                    </a>
-                </div>
+                <h2 class="card-title text-2xl mb-6">Detail Event</h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Left Column: Details -->
-                    <div class="space-y-6">
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Judul Event</h3>
-                            <p class="mt-1 text-lg font-medium text-gray-900">{{ $event->judul }}</p>
-                        </div>
+                <form id="eventForm" class="space-y-4" method="post"
+                    action="{{ route('admin.events.update', $event->id) }}" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <!-- Nama Event -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Judul Event</span>
+                        </label>
+                        <input type="text" name="judul" placeholder="Contoh: Konser Musik Rock"
+                            class="input input-bordered w-full" value="{{ $event->judul }}" disabled required />
+                    </div>
 
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Kategori</h3>
-                            <p class="mt-1">
-                                <span class="badge badge-outline badge-primary">{{ $event->kategori->nama }}</span>
-                            </p>
-                        </div>
+                    <!-- Deskripsi -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Deskripsi</span>
+                        </label>
+                        <br>
+                        <textarea name="deskripsi" placeholder="Deskripsi lengkap tentang event..."
+                            class="textarea textarea-bordered h-24 w-full" disabled required>{{ $event->deskripsi }}</textarea>
+                    </div>
 
-                        <div>
-                            <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Deskripsi</h3>
-                            <p class="mt-1 text-gray-700 whitespace-pre-line">{{ $event->deskripsi }}</p>
-                        </div>
+                    <!-- Tanggal & Waktu -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Tanggal & Waktu</span>
+                        </label>
+                        <input type="datetime-local" name="tanggal_waktu" class="input input-bordered w-full"
+                            value="{{ $event->tanggal_waktu->format('Y-m-d\TH:i') }}" disabled required />
+                    </div>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Tanggal & Waktu</h3>
-                                <p class="mt-1 text-gray-900">{{ $event->tanggal_waktu->format('d M Y, H:i') }} WIB</p>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Lokasi</h3>
-                                <p class="mt-1 text-gray-900">{{ $event->lokasi }}</p>
+                    <!-- Lokasi -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Lokasi</span>
+                        </label>
+                        <input type="text" name="lokasi" placeholder="Contoh: Stadion Utama"
+                            class="input input-bordered w-full" value="{{ $event->lokasi }}" disabled required />
+                    </div>
+
+                    <!-- Kategori -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Kategori</span>
+                        </label>
+                        <select name="kategori_id" class="select select-bordered w-full" required disabled>
+                            <option value="" disabled selected>Pilih Kategori</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                    {{ $category->id == $event->kategori_id ? 'selected' : '' }}>
+                                    {{ $category->nama }}
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <!-- Upload Gambar -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-semibold">Gambar Event</span>
+                        </label>
+                        <input type="file" name="gambar" accept="image/*"
+                            class="file-input file-input-bordered w-full" disabled />
+                        <label class="label">
+                            <span class="label-text-alt">Format: JPG, PNG, max 5MB</span>
+                        </label>
+                    </div>
+
+                    <!-- Preview Gambar -->
+                    <div id="imagePreview" class="overflow-hidden {{ $event->gambar ? '' : 'hidden' }}">
+                        <label class="label">
+                            <span class="label-text font-semibold">Preview Gambar</span>
+                        </label>
+                        <br>
+                        <div class="avatar max-w-sm">
+                            <div class="w-full rounded-lg">
+                                @if ($event->gambar)
+                                    <img id="previewImg" src="{{ asset('images/events/' . $event->gambar) }}"
+                                        alt="Preview">
+                                @else
+                                    <img id="previewImg" src="" alt="Preview">
+                                @endif
                             </div>
                         </div>
                     </div>
-
-                    <!-- Right Column: Image -->
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Gambar Event</h3>
-                        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-sm bg-gray-100">
-                            @if ($event->gambar)
-                                <img src="{{ asset('images/events/' . $event->gambar) }}" alt="{{ $event->judul }}" class="w-full h-full object-cover">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center text-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 

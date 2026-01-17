@@ -32,31 +32,27 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $validatedData = $request->validate([
-                'judul' => 'required|string|max:255',
-                'deskripsi' => 'required|string',
-                'tanggal_waktu' => 'required|date',
-                'lokasi' => 'required|string|max:255',
-                'kategori_id' => 'required|exists:kategoris,id',
-                'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
+        $validatedData = $request->validate([
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'tanggal_waktu' => 'required|date',
+            'lokasi' => 'required|string|max:255',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
 
-            // Handle file upload
-            if ($request->hasFile('gambar')) {
-                $imageName = time().'.'.$request->gambar->extension();
-                $request->gambar->move(public_path('images/events'), $imageName);
-                $validatedData['gambar'] = $imageName;
-            }
-
-            $validatedData['user_id'] = auth()->user()->id ?? null;
-
-            Event::create($validatedData);
-
-            return redirect()->route('admin.events.index')->with('success', 'Event berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat menambahkan event: ' . $e->getMessage()])->withInput();
+        // Handle file upload
+        if ($request->hasFile('gambar')) {
+            $imageName = time().'.'.$request->gambar->extension();
+            $request->gambar->move(public_path('images/events'), $imageName);
+            $validatedData['gambar'] = $imageName;
         }
+
+        $validatedData['user_id'] = auth()->user()->id ?? null;
+
+        Event::create($validatedData);
+
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil ditambahkan.');
     }
 
     /**
@@ -65,9 +61,10 @@ class EventController extends Controller
     public function show(string $id)
     {
         $event = Event::findOrFail($id);
+        $categories = Kategori::all();
         $tickets = $event->tikets;
 
-        return view('admin.event.show', compact('event', 'tickets'));
+        return view('admin.event.show', compact('event', 'categories', 'tickets'));
     }
 
     /**

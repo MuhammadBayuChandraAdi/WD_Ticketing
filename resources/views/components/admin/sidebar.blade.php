@@ -50,6 +50,7 @@
                     <span class="is-drawer-close:hidden">History Pembelian</span>
                 </a>
             </li>
+        </ul>    
 
         <!-- logout -->
         <div class="w-full p-4">

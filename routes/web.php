@@ -18,17 +18,18 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    //
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         // Category Management
-        Route::resource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('categories', CategoryController::class);
 
         // Event Management
         Route::resource('events', EventController::class);
 
         // Tiket Management 
-        Route::resource('tickets', TiketController::class)->only(['store', 'update', 'destroy']);
+        Route::resource('tickets', TiketController::class);
 
         // Histories
         Route::get('/histories', [HistoriesController::class, 'index'])->name('histories.index');
