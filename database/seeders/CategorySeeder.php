@@ -17,10 +17,7 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($kategoris as $kategori) {
-            Kategori::firstOrCreate(
-                ['nama' => $kategori['nama_kategori']],
-                ['nama' => $kategori['nama_kategori']]
-            );
+            Kategori::firstOrCreate(['nama' => $kategori['nama_kategori']]);
         }
     }
 }

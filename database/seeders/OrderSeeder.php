@@ -42,11 +42,17 @@ class OrderSeeder extends Seeder
         ];
 
         foreach ($orders as $order) {
-            Order::create($order);
+            Order::firstOrCreate(
+                ['user_id' => $order['user_id'], 'event_id' => $order['event_id'], 'order_date' => $order['order_date']],
+                $order
+            );
         }
 
         foreach ($order_details as $detail) {
-            DetailOrder::create($detail);
+            DetailOrder::firstOrCreate(
+                ['order_id' => $detail['order_id'], 'tiket_id' => $detail['tiket_id']],
+                $detail
+            );
         }
     }
 }

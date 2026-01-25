@@ -1,18 +1,18 @@
 <x-layouts.admin title="Tambah Event Baru">
     @if ($errors->any())
-        <div class="toast toast-bottom toast-center z-50">
-            <ul class="alert alert-error">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="toast toast-bottom toast-center z-50">
+        <ul class="alert alert-error">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
 
-        <script>
-            setTimeout(() => {
-                document.querySelector('.toast')?.remove()
-            }, 5000)
-        </script>
+    <script>
+        setTimeout(() => {
+            document.querySelector('.toast')?.remove()
+        }, 5000)
+    </script>
     @endif
 
     <div class="container mx-auto p-10">

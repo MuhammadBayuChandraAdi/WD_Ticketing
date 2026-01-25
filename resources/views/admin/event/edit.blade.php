@@ -53,10 +53,10 @@
                         <select name="kategori_id" class="select select-bordered w-full" required>
                             <option value="" disabled selected>Pilih Kategori</option>
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $category->id == $event->kategori_id ? 'selected' : '' }}>
-                                    {{ $category->nama }}
-                                </option>
+                            <option value="{{ $category->id }}"
+                                {{ $category->id == $event->kategori_id ? 'selected' : '' }}>
+                                {{ $category->nama }}
+                            </option>
                             @endforeach
 
                         </select>
@@ -83,10 +83,10 @@
                         <div class="avatar max-w-sm">
                             <div class="w-full rounded-lg">
                                 @if ($event->gambar)
-                                    <img id="previewImg" src="{{ asset('images/events/' . $event->gambar) }}"
-                                        alt="Preview">
+                                <img id="previewImg" src="{{ asset('images/events/' . $event->gambar) }}"
+                                    alt="Preview">
                                 @else
-                                    <img id="previewImg" src="" alt="Preview">
+                                <img id="previewImg" src="" alt="Preview">
                                 @endif
                             </div>
                         </div>

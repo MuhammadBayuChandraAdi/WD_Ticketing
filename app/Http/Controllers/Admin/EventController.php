@@ -6,20 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. 
      */
     public function index()
-{
-	$events = Event::all();
-	return view('admin.event.index', compact('events'));
-}
+    {
+        $events = Event::all();
+        return view('admin.event.index', compact('events'));
+    }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new resource. (membuat event baru)
      */
     public function create()
     {
@@ -28,7 +29,7 @@ class EventController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storage. (Menyimpan event baru)
      */
     public function store(Request $request)
     {
@@ -41,14 +42,14 @@ class EventController extends Controller
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Handle file upload
+        // Handle file upload (upload gambar)
         if ($request->hasFile('gambar')) {
-            $imageName = time().'.'.$request->gambar->extension();
+            $imageName = time() . '.' . $request->gambar->extension();
             $request->gambar->move(public_path('images/events'), $imageName);
             $validatedData['gambar'] = $imageName;
         }
 
-        $validatedData['user_id'] = auth()->user()->id ?? null;
+        $validatedData['user_id'] = Auth::id();
 
         Event::create($validatedData);
 
@@ -56,7 +57,7 @@ class EventController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource. (Menampilkan event)
      */
     public function show(string $id)
     {
@@ -96,7 +97,7 @@ class EventController extends Controller
 
             // Handle file upload
             if ($request->hasFile('gambar')) {
-                $imageName = time().'.'.$request->gambar->extension();
+                $imageName = time() . '.' . $request->gambar->extension();
                 $request->gambar->move(public_path('images/events'), $imageName);
                 $validatedData['gambar'] = $imageName;
             }

@@ -38,7 +38,10 @@ class TicketSeeder extends Seeder
         ];
 
         foreach ($tickets as $ticket) {
-            Tiket::create($ticket);
+            Tiket::firstOrCreate(
+                ['event_id' => $ticket['event_id'], 'tipe' => $ticket['tipe']],
+                $ticket
+            );
         }
     }
 }

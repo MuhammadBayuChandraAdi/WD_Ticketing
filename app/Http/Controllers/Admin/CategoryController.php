@@ -12,10 +12,10 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-		$categories = Kategori::all();
-		return view('admin.category.index', compact('categories'));
-}
+    {
+        $categories = Kategori::all();
+        return view('admin.category.index', compact('categories'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -26,7 +26,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storage. (menyimpan kategori)
      */
     public function store(Request $request)
     {
@@ -35,7 +35,7 @@ class CategoryController extends Controller
         ]);
 
         if (!isset($payload['nama'])) {
-            return redirect()->route('admin.categories.index')->with('error', 'Nama kategori wajib diisi.');
+            return redirect()->route('categories.index')->with('error', 'Nama kategori wajib diisi.');
         }
 
         Kategori::create([
@@ -44,6 +44,7 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
+
 
     /**
      * Display the specified resource.
@@ -71,7 +72,7 @@ class CategoryController extends Controller
         ]);
 
         if (!isset($payload['nama'])) {
-            return redirect()->route('admin.categories.index')->with('error', 'Nama kategori wajib diisi.');
+            return redirect()->route('categories.index')->with('error', 'Nama kategori wajib diisi.');
         }
 
         $category = Kategori::findOrFail($id);
@@ -86,9 +87,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $category = Kategori::findOrFail($id);
-        $category->delete();
-
+        Kategori::destroy($id);
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

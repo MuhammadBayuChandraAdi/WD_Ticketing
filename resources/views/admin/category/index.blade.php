@@ -1,17 +1,17 @@
 <x-layouts.admin title="Manajemen Kategori">
-   
-    @if (session('success'))
-        <div class="toast toast-bottom toast-center">
-            <div class="alert alert-success">
-                <span>{{ session('success') }}</span>
-            </div>
-        </div>
 
-        <script>
+    @if (session('success'))
+    <div class="toast toast-bottom toast-center">
+        <div class="alert alert-success">
+            <span>{{ session('success') }}</span>
+        </div>
+    </div>
+
+    <script>
         setTimeout(() => {
             document.querySelector('.toast')?.remove()
         }, 3000)
-        </script>
+    </script>
     @endif
 
     <div class="container mx-auto p-10">
@@ -31,18 +31,18 @@
                 </thead>
                 <tbody>
                     @forelse ($categories as $index => $category)
-                        <tr>
-                            <th>{{ $index + 1 }}</th>
-                            <td>{{ $category->nama }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-primary mr-2" onclick="openEditModal(this)" data-id="{{ $category->id }}" data-nama="{{ $category->nama }}">Edit</button>
-                                <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)" data-id="{{ $category->id }}">Hapus</button>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="3" class="text-center">Tidak ada kategori tersedia.</td>
-                        </tr>
+                    <tr>
+                        <th>{{ $index + 1 }}</th>
+                        <td>{{ $category->nama }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary mr-2" onclick="openEditModal(this)" data-id="{{ $category->id }}" data-nama="{{ $category->nama }}">Edit</button>
+                            <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)" data-id="{{ $category->id }}">Hapus</button>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center">Tidak ada kategori tersedia.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
@@ -68,7 +68,7 @@
     </dialog>
 
     <!-- Edit Category Modal With Retrieve ID -->
-     <dialog id="edit_modal" class="modal">
+    <dialog id="edit_modal" class="modal">
         <form method="POST" class="modal-box">
             @csrf
             @method('PUT')
@@ -111,11 +111,11 @@
             const name = button.dataset.nama;
             const id = button.dataset.id;
             const form = document.querySelector('#edit_modal form');
-            
+
             document.getElementById("edit_category_name").value = name;
             document.getElementById("edit_category_id").value = id;
 
-             // Set action dengan parameter ID
+            // Set action dengan parameter ID
             form.action = `/admin/categories/${id}`
 
             edit_modal.showModal();
@@ -131,7 +131,7 @@
 
             delete_modal.showModal();
         }
-</script>
+    </script>
 
 
 </x-layouts.admin>

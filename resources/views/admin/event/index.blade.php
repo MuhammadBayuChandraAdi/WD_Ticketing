@@ -1,16 +1,16 @@
 <x-layouts.admin title="Manajemen Event">
     @if (session('success'))
-        <div class="toast toast-bottom toast-center">
-            <div class="alert alert-success">
-                <span>{{ session('success') }}</span>
-            </div>
+    <div class="toast toast-bottom toast-center">
+        <div class="alert alert-success">
+            <span>{{ session('success') }}</span>
         </div>
+    </div>
 
-        <script>
+    <script>
         setTimeout(() => {
             document.querySelector('.toast')?.remove()
         }, 3000)
-        </script>
+    </script>
     @endif
 
     <div class="container mx-auto p-10">
@@ -82,7 +82,7 @@
 
             delete_modal.showModal();
         }
-</script>
+    </script>
 
 
 </x-layouts.admin>
