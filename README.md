@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
@@ -57,3 +58,17 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+=======
+# ticketing-app
+>>>>>>> e9072206a69a40424662d9e8320a6df5316984de
+
+npm install 
+composer update
+'kalau eror' composer install
+php artisan key:generate
+php artisan migrate
+php artisan serve
+
+setelah ini buka terminal baru
+npm run dev
+composer run dev

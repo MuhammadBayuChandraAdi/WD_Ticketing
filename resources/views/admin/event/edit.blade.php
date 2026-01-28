@@ -41,8 +41,15 @@
                         <label class="label">
                             <span class="label-text font-semibold">Lokasi</span>
                         </label>
-                        <input type="text" name="lokasi" placeholder="Contoh: Stadion Utama"
-                            class="input input-bordered w-full" value="{{ $event->lokasi }}" required />
+                        <select name="lokasi_id" class="select select-bordered w-full" required>
+                            <option value="" disabled selected>Pilih Lokasi</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}"
+                                    {{ $location->id == $event->lokasi_id ? 'selected' : '' }}>
+                                    {{ $location->nama }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Kategori -->
@@ -53,10 +60,10 @@
                         <select name="kategori_id" class="select select-bordered w-full" required>
                             <option value="" disabled selected>Pilih Kategori</option>
                             @foreach ($categories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ $category->id == $event->kategori_id ? 'selected' : '' }}>
-                                {{ $category->nama }}
-                            </option>
+                                <option value="{{ $category->id }}"
+                                    {{ $category->id == $event->kategori_id ? 'selected' : '' }}>
+                                    {{ $category->nama }}
+                                </option>
                             @endforeach
 
                         </select>
@@ -83,10 +90,10 @@
                         <div class="avatar max-w-sm">
                             <div class="w-full rounded-lg">
                                 @if ($event->gambar)
-                                <img id="previewImg" src="{{ asset('images/events/' . $event->gambar) }}"
-                                    alt="Preview">
+                                    <img id="previewImg" src="{{ asset('images/events/' . $event->gambar) }}"
+                                        alt="Preview">
                                 @else
-                                <img id="previewImg" src="" alt="Preview">
+                                    <img id="previewImg" src="" alt="Preview">
                                 @endif
                             </div>
                         </div>

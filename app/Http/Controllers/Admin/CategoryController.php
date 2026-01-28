@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\Kategori;
 
 class CategoryController extends Controller
 {
@@ -26,7 +26,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage. (menyimpan kategori)
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
@@ -38,13 +38,9 @@ class CategoryController extends Controller
             return redirect()->route('categories.index')->with('error', 'Nama kategori wajib diisi.');
         }
 
-        Kategori::create([
-            'nama' => $payload['nama'],
-        ]);
-
+        Kategori::create(['nama' => $payload['nama']]);
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
-
 
     /**
      * Display the specified resource.

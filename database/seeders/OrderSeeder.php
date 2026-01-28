@@ -32,27 +32,25 @@ class OrderSeeder extends Seeder
                 'tiket_id' => 1,
                 'jumlah' => 1,
                 'subtotal_harga' => 1500000,
+                'payment_type_id' => 1,
+
             ],
             [
                 'order_id' => 2,
                 'tiket_id' => 3,
                 'jumlah' => 1,
                 'subtotal_harga' => 200000,
+                'payment_type_id' => 2,
+
             ],
         ];
 
         foreach ($orders as $order) {
-            Order::firstOrCreate(
-                ['user_id' => $order['user_id'], 'event_id' => $order['event_id'], 'order_date' => $order['order_date']],
-                $order
-            );
+            Order::create($order);
         }
 
         foreach ($order_details as $detail) {
-            DetailOrder::firstOrCreate(
-                ['order_id' => $detail['order_id'], 'tiket_id' => $detail['tiket_id']],
-                $detail
-            );
+            DetailOrder::create($detail);
         }
     }
 }

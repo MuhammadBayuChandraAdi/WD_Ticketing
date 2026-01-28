@@ -1,16 +1,16 @@
 <x-layouts.admin title="Manajemen Event">
     @if (session('success'))
-    <div class="toast toast-bottom toast-center">
-        <div class="alert alert-success">
-            <span>{{ session('success') }}</span>
+        <div class="toast toast-bottom toast-center">
+            <div class="alert alert-success">
+                <span>{{ session('success') }}</span>
+            </div>
         </div>
-    </div>
 
-    <script>
-        setTimeout(() => {
-            document.querySelector('.toast')?.remove()
-        }, 3000)
-    </script>
+        <script>
+            setTimeout(() => {
+                document.querySelector('.toast')?.remove()
+            }, 3000)
+        </script>
     @endif
 
     <div class="container mx-auto p-10">
@@ -32,22 +32,25 @@
                 </thead>
                 <tbody>
                     @forelse ($events as $index => $event)
-                    <tr>
-                        <th>{{ $index + 1 }}</th>
-                        <td>{{ $event->judul }}</td>
-                        <td>{{ $event->kategori->nama }}</td>
-                        <td>{{ $event->tanggal_waktu->format('d M Y') }}</td>
-                        <td>{{ $event->lokasi }}</td>
-                        <td>
-                            <a href="{{ route('admin.events.show', $event->id) }}" class="btn btn-sm btn-info mr-2">Detail</a>
-                            <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-sm btn-primary mr-2">Edit</a>
-                            <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)" data-id="{{ $event->id }}">Hapus</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <th>{{ $index + 1 }}</th>
+                            <td>{{ $event->judul }}</td>
+                            <td>{{ $event->kategori->nama }}</td>
+                            <td>{{ $event->tanggal_waktu->format('d M Y') }}</td>
+                            <td>{{ $event->lokasiEvent?->nama ?? '-' }}</td>
+                            <td>
+                                <a href="{{ route('admin.events.show', $event->id) }}"
+                                    class="btn btn-sm btn-info mr-2">Detail</a>
+                                <a href="{{ route('admin.events.edit', $event->id) }}"
+                                    class="btn btn-sm btn-primary mr-2">Edit</a>
+                                <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)"
+                                    data-id="{{ $event->id }}">Hapus</button>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="6" class="text-center">Tidak ada event tersedia.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="6" class="text-center">Tidak ada event tersedia.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

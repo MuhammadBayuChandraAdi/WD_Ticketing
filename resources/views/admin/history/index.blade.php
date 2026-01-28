@@ -17,20 +17,21 @@
                 </thead>
                 <tbody>
                     @forelse ($histories as $index => $history)
-                    <tr>
-                        <th>{{ $index + 1 }}</th>
-                        <td>{{ $history->user->name }}</td>
-                        <td>{{ $history->event?->judul ?? '-' }}</td>
-                        <td>{{ $history->created_at->format('d M Y') }}</td>
-                        <td>{{ number_format($history->total_harga, 0, ',', '.') }}</td>
-                        <td>
-                            <a href="{{ route('admin.histories.show', $history->id) }}" class="btn btn-sm btn-info text-white">Detail</a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <th>{{ $index + 1 }}</th>
+                            <td>{{ $history->user->name }}</td>
+                            <td>{{ $history->event?->judul ?? '-' }}</td>
+                            <td>{{ $history->created_at->format('d M Y') }}</td>
+                            <td>{{ number_format($history->total_harga, 0, ',', '.') }}</td>
+                            <td>
+                                <a href="{{ route('admin.histories.show', $history->id) }}"
+                                    class="btn btn-sm btn-info text-white">Detail</a>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="5" class="text-center">Tidak ada history pembelian tersedia.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="5" class="text-center">Tidak ada history pembelian tersedia.</td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

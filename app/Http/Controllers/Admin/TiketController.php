@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tiket;
 use Illuminate\Http\Request;
-
+use App\Models\Tiket;
 class TiketController extends Controller
 {
     /**
@@ -31,7 +30,7 @@ class TiketController extends Controller
     {
         $validatedData = request()->validate([
             'event_id' => 'required|exists:events,id',
-            'tipe' => 'required|string|max:255',
+            'ticket_type_id' => 'required|exists:ticket_types,id',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
         ]);
@@ -66,7 +65,7 @@ class TiketController extends Controller
         $ticket = Tiket::findOrFail($id);
 
         $validatedData = $request->validate([
-            'tipe' => 'required|string|max:255',
+            'ticket_type_id' => 'required|exists:ticket_types,id',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
         ]);

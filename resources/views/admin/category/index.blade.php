@@ -1,18 +1,20 @@
 <x-layouts.admin title="Manajemen Kategori">
 
+    {{-- Notifikasi Sukses --}}
     @if (session('success'))
-    <div class="toast toast-bottom toast-center">
-        <div class="alert alert-success">
-            <span>{{ session('success') }}</span>
+        <div class="toast toast-bottom toast-center">
+            <div class="alert alert-success">
+                <span>{{ session('success') }}</span>
+            </div>
         </div>
-    </div>
 
-    <script>
-        setTimeout(() => {
-            document.querySelector('.toast')?.remove()
-        }, 3000)
-    </script>
+        <script>
+            setTimeout(() => {
+                document.querySelector('.toast')?.remove()
+            }, 3000)
+        </script>
     @endif
+    {{-- Notifikasi Sukses --}}
 
     <div class="container mx-auto p-10">
         <div class="flex">
@@ -30,25 +32,30 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- Tabel kategori --}}
                     @forelse ($categories as $index => $category)
-                    <tr>
-                        <th>{{ $index + 1 }}</th>
-                        <td>{{ $category->nama }}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary mr-2" onclick="openEditModal(this)" data-id="{{ $category->id }}" data-nama="{{ $category->nama }}">Edit</button>
-                            <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)" data-id="{{ $category->id }}">Hapus</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <th>{{ $index + 1 }}</th>
+                            <td>{{ $category->nama }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary mr-2" onclick="openEditModal(this)"
+                                    data-id="{{ $category->id }}" data-nama="{{ $category->nama }}">Edit</button>
+                                <button class="btn btn-sm bg-red-500 text-white" onclick="openDeleteModal(this)"
+                                    data-id="{{ $category->id }}">Hapus</button>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="3" class="text-center">Tidak ada kategori tersedia.</td>
-                    </tr>
+                        <tr>
+                            <td colspan="3" class="text-center">Tidak ada kategori tersedia.</td>
+                        </tr>
                     @endforelse
+                    {{-- Tabel Kategori --}}
                 </tbody>
             </table>
         </div>
     </div>
 
+    {{-- Modal Tambah Kategori --}}
     <!-- Add Category Modal -->
     <dialog id="add_modal" class="modal">
         <form method="POST" action="{{ route('admin.categories.store') }}" class="modal-box">
@@ -58,7 +65,8 @@
                 <label class="label mb-2">
                     <span class="label-text">Nama Kategori</span>
                 </label>
-                <input type="text" placeholder="Masukkan nama kategori" class="input input-bordered w-full" name="nama" required />
+                <input type="text" placeholder="Masukkan nama kategori" class="input input-bordered w-full"
+                    name="nama" required />
             </div>
             <div class="modal-action">
                 <button class="btn btn-primary" type="submit">Simpan</button>
@@ -66,7 +74,9 @@
             </div>
         </form>
     </dialog>
+    {{-- Modal Tambah Kategori --}}
 
+    {{-- Modal Edit Kategori --}}
     <!-- Edit Category Modal With Retrieve ID -->
     <dialog id="edit_modal" class="modal">
         <form method="POST" class="modal-box">
@@ -80,7 +90,8 @@
                 <label class="label mb-2">
                     <span class="label-text">Nama Kategori</span>
                 </label>
-                <input type="text" placeholder="Masukkan nama kategori" class="input input-bordered w-full" value="Kategori Contoh" id="edit_category_name" name="nama" />
+                <input type="text" placeholder="Masukkan nama kategori" class="input input-bordered w-full"
+                    value="Kategori Contoh" id="edit_category_name" name="nama" />
             </div>
             <div class="modal-action">
                 <button class="btn btn-primary" type="submit">Simpan</button>
@@ -88,7 +99,9 @@
             </div>
         </form>
     </dialog>
+    {{-- Modal Edit Kategori --}}
 
+    {{-- Modal Hapus Kategori --}}
     <!-- Delete Modal -->
     <dialog id="delete_modal" class="modal">
         <form method="POST" class="modal-box">
@@ -105,6 +118,7 @@
             </div>
         </form>
     </dialog>
+    {{-- Modal Hapus Kategori --}}
 
     <script>
         function openEditModal(button) {

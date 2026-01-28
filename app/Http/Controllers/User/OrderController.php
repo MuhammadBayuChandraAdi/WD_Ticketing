@@ -24,7 +24,7 @@ class OrderController extends Controller
     // show a specific order
     public function show(Order $order)
     {
-        $order->load('detailOrders.tiket', 'event');
+        $order->load(['detailOrders.tiket.ticketType', 'detailOrders.paymentType', 'event']);
         return view('orders.show', compact('order'));
     }
 
@@ -34,6 +34,7 @@ class OrderController extends Controller
 
         $data = $request->validate([
             'event_id' => 'required|exists:events,id',
+            'payment_type_id' => 'required|exists:payment_types,id',
             'items' => 'required|array|min:1',
             'items.*.tiket_id' => 'required|integer|exists:tikets,id',
             'items.*.jumlah' => 'required|integer|min:1',
@@ -45,13 +46,22 @@ class OrderController extends Controller
             // transaction
             $order = DB::transaction(function () use ($data, $user) {
                 $total = 0;
+                $tiketCache = []; // Cache tiket yang sudah di-query
+
+
                 // validate stock and calculate total
                 foreach ($data['items'] as $it) {
+                    // User A yang beli tiket yang sama dengan User B secara bersamaan
+                    // bisa menyebabkan oversell, maka kita lock row tiketnya saat cek stok
+                    // dan hitung total
                     $t = Tiket::lockForUpdate()->findOrFail($it['tiket_id']);
                     if ($t->stok < $it['jumlah']) {
-                        throw new \Exception("Stok tidak cukup untuk tipe: {$t->tipe}");
+                        $namaTipe = $t->ticketType->nama ?? 'Tiket';
+                        throw new \Exception("Stok tidak cukup untuk tipe: {$namaTipe}");
                     }
                     $total += ($t->harga ?? 0) * $it['jumlah'];
+                    $tiketCache[$t->id] = $t;
+
                 }
 
                 $order = Order::create([
@@ -62,13 +72,14 @@ class OrderController extends Controller
                 ]);
 
                 foreach ($data['items'] as $it) {
-                    $t = Tiket::findOrFail($it['tiket_id']);
+                    $t = $tiketCache[$it['tiket_id']]; // Pakai dari cache, TIDAK query lagi
                     $subtotal = ($t->harga ?? 0) * $it['jumlah'];
                     DetailOrder::create([
                         'order_id' => $order->id,
                         'tiket_id' => $t->id,
                         'jumlah' => $it['jumlah'],
                         'subtotal_harga' => $subtotal,
+                        'payment_type_id' => $data['payment_type_id'],
                     ]);
 
                     // reduce stock

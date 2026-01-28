@@ -4,16 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::table('detail_orders', function (Blueprint $table) {
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
-            $table->foreign('tiket_id')->references('id')->on('tikets')->onDelete('cascade');
+            $table->foreignId('payment_type_id')
+                ->nullable()
+                ->constrained('payment_types')
+                ->nullOnDelete();
         });
     }
 
@@ -23,8 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('detail_orders', function (Blueprint $table) {
-            $table->dropForeign(['order_id']);
-            $table->dropForeign(['tiket_id']);
+            //
         });
     }
 };

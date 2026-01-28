@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\TicketType;
+use Illuminate\Http\Request;
 use App\Models\Event;
 use App\Models\Kategori;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\LokasiEvent;
 
 class EventController extends Controller
 {
     /**
-     * Display a listing of the resource. 
+     * Display a listing of the resource.
      */
     public function index()
     {
@@ -20,16 +21,17 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource. (membuat event baru)
+     * Show the form for creating a new resource.
      */
     public function create()
     {
         $categories = Kategori::all();
-        return view('admin.event.create', compact('categories'));
+        $locations = LokasiEvent::all();
+        return view('admin.event.create', compact('categories', 'locations'));
     }
 
     /**
-     * Store a newly created resource in storage. (Menyimpan event baru)
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
@@ -37,19 +39,25 @@ class EventController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'tanggal_waktu' => 'required|date',
-            'lokasi' => 'required|string|max:255',
+            'lokasi_id' => 'required|exists:lokasi_events,id',
             'kategori_id' => 'required|exists:kategoris,id',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Handle file upload (upload gambar)
+        // Handle file upload
         if ($request->hasFile('gambar')) {
             $imageName = time() . '.' . $request->gambar->extension();
             $request->gambar->move(public_path('images/events'), $imageName);
             $validatedData['gambar'] = $imageName;
         }
 
-        $validatedData['user_id'] = Auth::id();
+        $validatedData['user_id'] = auth()->user()->id ?? null;
+
+        // Isi kolom lokasi (legacy) agar tidak melanggar constraint NOT NULL
+        $location = LokasiEvent::find($validatedData['lokasi_id']);
+        if ($location) {
+            $validatedData['lokasi'] = $location->nama;
+        }
 
         Event::create($validatedData);
 
@@ -57,15 +65,17 @@ class EventController extends Controller
     }
 
     /**
-     * Display the specified resource. (Menampilkan event)
+     * Display the specified resource.
      */
     public function show(string $id)
     {
         $event = Event::findOrFail($id);
         $categories = Kategori::all();
         $tickets = $event->tikets;
+        $ticketTypes = TicketType::all();
 
-        return view('admin.event.show', compact('event', 'categories', 'tickets'));
+
+        return view('admin.event.show', compact('event', 'categories', 'tickets', 'ticketTypes'));
     }
 
     /**
@@ -75,7 +85,8 @@ class EventController extends Controller
     {
         $event = Event::findOrFail($id);
         $categories = Kategori::all();
-        return view('admin.event.edit', compact('event', 'categories'));
+        $locations = LokasiEvent::all();
+        return view('admin.event.edit', compact('event', 'categories', 'locations'));
     }
 
     /**
@@ -90,7 +101,7 @@ class EventController extends Controller
                 'judul' => 'required|string|max:255',
                 'deskripsi' => 'required|string',
                 'tanggal_waktu' => 'required|date',
-                'lokasi' => 'required|string|max:255',
+                'lokasi_id' => 'required|exists:lokasi_events,id',
                 'kategori_id' => 'required|exists:kategoris,id',
                 'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
@@ -100,6 +111,12 @@ class EventController extends Controller
                 $imageName = time() . '.' . $request->gambar->extension();
                 $request->gambar->move(public_path('images/events'), $imageName);
                 $validatedData['gambar'] = $imageName;
+            }
+
+            // Sinkronkan kolom lokasi (legacy) dengan nama lokasi terpilih
+            $location = LokasiEvent::find($validatedData['lokasi_id']);
+            if ($location) {
+                $validatedData['lokasi'] = $location->nama;
             }
 
             $event->update($validatedData);

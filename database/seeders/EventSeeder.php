@@ -16,8 +16,9 @@ class EventSeeder extends Seeder
                 'deskripsi' => 'Nikmati malam penuh energi dengan band rock terkenal.',
                 'tanggal_waktu' => '2024-08-15 19:00:00',
                 'lokasi' => 'Stadion Utama',
+                'lokasi_id' => 1,
                 'kategori_id' => 1,
-                'gambar' => 'assets/images/Konser.jpeg',
+                'gambar' => 'Konser.jpeg',
             ],
             [
                 'user_id' => 1,
@@ -25,8 +26,9 @@ class EventSeeder extends Seeder
                 'deskripsi' => 'Jelajahi karya seni modern dari seniman lokal dan internasional.',
                 'tanggal_waktu' => '2024-09-10 10:00:00',
                 'lokasi' => 'Galeri Seni Kota',
+                'lokasi_id' => 2,
                 'kategori_id' => 2,
-                'gambar' => 'assets/images/Seni.jpg',
+                'gambar' => 'Seni.jpg',
             ],
             [
                 'user_id' => 1,
@@ -34,16 +36,14 @@ class EventSeeder extends Seeder
                 'deskripsi' => 'Cicipi berbagai hidangan lezat dari seluruh dunia.',
                 'tanggal_waktu' => '2024-10-05 12:00:00',
                 'lokasi' => 'Taman Kota',
+                'lokasi_id' => 3,
                 'kategori_id' => 3,
-                'gambar' => 'assets/images/festival.jpeg',
+                'gambar' => 'festival.jpeg',
             ],
         ];
 
         foreach ($events as $event) {
-            Event::updateOrCreate(
-                ['judul' => $event['judul']],
-                $event
-            );
+            Event::create($event);
         }
     }
 }

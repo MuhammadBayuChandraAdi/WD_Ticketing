@@ -14,6 +14,7 @@ class DetailOrder extends Model
         'tiket_id',
         'jumlah',
         'subtotal_harga',
+        'payment_type_id',
     ];
 
     public function order()
@@ -24,5 +25,10 @@ class DetailOrder extends Model
     public function tiket()
     {
         return $this->belongsTo(Tiket::class);
+    }
+
+    public function paymentType()
+    {
+        return $this->belongsTo(PaymentType::class);
     }
 }
